@@ -1,0 +1,8 @@
+[workspace]
+
+members = [
+    "satisfactory",
+    "machine",
+    "resource",
+    "extractor",
+]
