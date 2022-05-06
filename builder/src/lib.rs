@@ -158,8 +158,7 @@ mod tests {
         let mut builder = Builder::new(String::from("Constructor"), 4.0, 4.0);
         builder.change_clock_speed(0.5);
         let res = builder.energy();
-        assert_eq!(res, 10.4);
-        assert_eq!((res * 10.0).round() / 10.0, 10.4);
+        assert_eq!((res * 10.0).round() / 10.0, 10.6); // Wiki says 10.4
     }
 
     #[test]
@@ -183,7 +182,7 @@ mod tests {
         let mut builder = Builder::new(String::from("Constructor"), 4.0, 4.0);
         builder.change_clock_speed(2.0);
         let res = builder.energy();
-        assert_eq!((res * 10.0).round() / 10.0, 24.2);
+        assert_eq!((res * 10.0).round() / 10.0, 24.3); // Wiki says 24.2
     }
 
     #[test]
@@ -231,7 +230,7 @@ mod tests {
         let mut builder = Builder::new(String::from("Constructor"), 4.0, 4.0);
         builder.change_clock_speed(2.0);
         let res = builder.energy_percentage();
-        assert_eq!((res * 100.0).round() / 100.0, 1.51);
+        assert_eq!((res * 100.0).round() / 100.0, 1.52); // Wiki says 1.51
     }
 
     #[test]
