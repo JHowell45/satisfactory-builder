@@ -2,7 +2,7 @@
 
 members = [
     "satisfactory",
-    "machine",
+    "builder",
     "resource",
     "extractor",
 ]
