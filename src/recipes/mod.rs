@@ -308,7 +308,7 @@ impl Recipes {
             "Turbo Motor",
             HashMap::from([
                 (Resource::Motor, 7.5),
-                (Resource::Stator, 7.5),
+                (Resource::CoolingSystem, 7.5),
                 (Resource::RadioControlUnit, 3.75),
                 (Resource::Rubber, 45.0),
             ]),
