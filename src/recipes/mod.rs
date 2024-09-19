@@ -117,21 +117,21 @@ impl Recipes {
             HashMap::from([(Resource::CopperIngot, 20.0)]),
             HashMap::from([(Resource::CopperSheet, 10.0)]),
             false,
-            true,
+            false,
         ));
         recipes.add(Recipe::new(
             "Wire",
             HashMap::from([(Resource::CopperIngot, 15.0)]),
             HashMap::from([(Resource::Wire, 30.0)]),
             false,
-            true,
+            false,
         ));
         recipes.add(Recipe::new(
             "Cable",
             HashMap::from([(Resource::Wire, 60.0)]),
             HashMap::from([(Resource::Cable, 30.0)]),
             false,
-            true,
+            false,
         ));
     }
 
@@ -173,7 +173,7 @@ impl Recipes {
             HashMap::from([(Resource::Biomass, 120.0)]),
             HashMap::from([(Resource::SolidBiofuel, 60.0)]),
             false,
-            true,
+            false,
         ));
     }
 
@@ -211,7 +211,15 @@ impl Recipes {
         ));
     }
 
-    fn build_steel(recipes: &mut Recipes) {}
+    fn build_steel(recipes: &mut Recipes) {
+        recipes.add(Recipe::new(
+            "Steel Ingot",
+            HashMap::from([(Resource::CateriumOre, 45.0)]),
+            HashMap::from([(Resource::CateriumIngot, 15.0)]),
+            false,
+            true,
+        ));
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
