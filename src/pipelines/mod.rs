@@ -40,9 +40,9 @@ impl Pipeline {
 
     fn create_node(resource: Resource, recipes: &Recipes) -> PipelineNode {
         let resource_recipes: &Vec<Recipe>;
-        match recipes.get_component_recipes(resource) {
+        match recipes.get_component_recipes(resource.clone()) {
             Ok(recipes) => resource_recipes = recipes,
-            Err(msg) => panic!("{}", msg)
+            Err(msg) => panic!("{} || {:?}", msg, resource)
         }
         PipelineNode::new(Box::new(resource_recipes.first().unwrap().clone()))
     }
