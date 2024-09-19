@@ -52,6 +52,8 @@ impl Recipes {
         Self::build_quartz(s.borrow_mut());
         Self::build_caterium(s.borrow_mut());
         Self::build_steel(s.borrow_mut());
+        Self::build_frames(s.borrow_mut());
+        Self::build_motors(s.borrow_mut());
 
         return s;
     }
@@ -245,6 +247,44 @@ impl Recipes {
             false,
         ));
     }
+
+    fn build_frames(recipes: &mut Recipes) {
+        recipes.add(Recipe::new(
+            "Modular Frame",
+            HashMap::from([
+                (Resource::ReinforcedIronPlate, 3.0),
+                (Resource::IronRod, 12.0),
+            ]),
+            HashMap::from([(Resource::ModularFrame, 2.0)]),
+            false,
+            false,
+        ));
+        recipes.add(Recipe::new(
+            "Heavy Modular Frame",
+            HashMap::from([
+                (Resource::ModularFrame, 10.0),
+                (Resource::EncasedIndustrialBeam, 10.0),
+                (Resource::SteelPipe, 30.0),
+                (Resource::Screws, 200.0),
+            ]),
+            HashMap::from([(Resource::HeavyModularFrame, 2.0)]),
+            false,
+            false,
+        ));
+    }
+
+    fn build_motors(recipes: &mut Recipes) {
+        recipes.add(Recipe::new(
+            "Rotor",
+            HashMap::from([
+                (Resource::ReinforcedIronPlate, 3.0),
+                (Resource::IronRod, 12.0),
+            ]),
+            HashMap::from([(Resource::ModularFrame, 2.0)]),
+            false,
+            false,
+        ));
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -279,7 +319,7 @@ impl RecipeTree {
         let resource_recipes: &Vec<Recipe>;
         match recipes.get_component_recipes(resource.clone()) {
             Ok(recipes) => resource_recipes = recipes,
-            Err(msg) => panic!("{} || {:?}", msg, resource)
+            Err(msg) => panic!("{} || {:?}", msg, resource),
         }
         let recipe = resource_recipes.first().unwrap().clone();
         let mut children = Vec::new();
