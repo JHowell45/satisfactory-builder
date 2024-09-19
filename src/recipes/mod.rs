@@ -277,10 +277,42 @@ impl Recipes {
         recipes.add(Recipe::new(
             "Rotor",
             HashMap::from([
-                (Resource::ReinforcedIronPlate, 3.0),
-                (Resource::IronRod, 12.0),
+                (Resource::IronRod, 20.0),
+                (Resource::Screws, 100.0),
             ]),
-            HashMap::from([(Resource::ModularFrame, 2.0)]),
+            HashMap::from([(Resource::Rotor, 4.0)]),
+            false,
+            false,
+        ));
+        recipes.add(Recipe::new(
+            "Stator",
+            HashMap::from([
+                (Resource::SteelPipe, 15.0),
+                (Resource::Wire, 40.0),
+            ]),
+            HashMap::from([(Resource::Stator, 5.0)]),
+            false,
+            false,
+        ));
+        recipes.add(Recipe::new(
+            "Motor",
+            HashMap::from([
+                (Resource::Rotor, 10.0),
+                (Resource::Stator, 10.0),
+            ]),
+            HashMap::from([(Resource::Motor, 5.0)]),
+            false,
+            false,
+        ));
+        recipes.add(Recipe::new(
+            "Turbo Motor",
+            HashMap::from([
+                (Resource::Motor, 7.5),
+                (Resource::Stator, 7.5),
+                (Resource::RadioControlUnit, 3.75),
+                (Resource::Rubber, 45.0),
+            ]),
+            HashMap::from([(Resource::TurboMotor, 1.875)]),
             false,
             false,
         ));
