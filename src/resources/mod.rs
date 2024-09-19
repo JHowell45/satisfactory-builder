@@ -65,6 +65,16 @@ pub enum Resource {
     PetroleumCoke,
     Plastic,
     Rubber,
+    // Aluminium
+    BauxiteOre,
+    AluminaSolution,
+    AluminiumScrap,
+    AluminumIngot,
+    AluminumCasing,
+    AlcladAluminumSheet,
+    HeatSink,
+    CoolingSystem,
+    Battery,
     // Liquids
     Water
 }
