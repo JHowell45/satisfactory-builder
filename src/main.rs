@@ -17,6 +17,6 @@ fn main() {
     let pipeline = RecipeTree::build(Resource::ReinforcedIronPlate, &recipes);
     // println!("{:#?}", pipeline);
 
-    let pipeline = RecipeTree::build(Resource::EncasedIndustrialBeam, &recipes);
+    let pipeline = RecipeTree::build(Resource::Motor, &recipes);
     println!("{:#?}", pipeline);
 }

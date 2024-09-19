@@ -228,7 +228,7 @@ impl Recipes {
         recipes.add(Recipe::new(
             "Steel Pipe",
             HashMap::from([(Resource::SteelIngot, 30.0)]),
-            HashMap::from([(Resource::CateriumIngot, 20.0)]),
+            HashMap::from([(Resource::SteelPipe, 20.0)]),
             false,
             false,
         ));
