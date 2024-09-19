@@ -4,7 +4,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::resources::Resource;
 
-
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Recipe {
     name: String,
@@ -49,6 +48,11 @@ impl Recipes {
         Self::build_iron(s.borrow_mut());
         Self::build_copper(s.borrow_mut());
         Self::build_concrete(s.borrow_mut());
+        Self::build_biofuel(s.borrow_mut());
+        Self::build_quartz(s.borrow_mut());
+        Self::build_caterium(s.borrow_mut());
+        Self::build_steel(s.borrow_mut());
+
         return s;
     }
 
@@ -273,9 +277,9 @@ impl RecipeTree {
 
     fn create_node(resource: Resource, recipes: &Recipes) -> RecipeNode {
         let resource_recipes: &Vec<Recipe>;
-        match recipes.get_component_recipes(resource) {
+        match recipes.get_component_recipes(resource.clone()) {
             Ok(recipes) => resource_recipes = recipes,
-            Err(msg) => panic!("{}", msg),
+            Err(msg) => panic!("{} || {:?}", msg, resource)
         }
         let recipe = resource_recipes.first().unwrap().clone();
         let mut children = Vec::new();
