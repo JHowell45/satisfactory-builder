@@ -214,10 +214,31 @@ impl Recipes {
     fn build_steel(recipes: &mut Recipes) {
         recipes.add(Recipe::new(
             "Steel Ingot",
-            HashMap::from([(Resource::CateriumOre, 45.0)]),
-            HashMap::from([(Resource::CateriumIngot, 15.0)]),
+            HashMap::from([(Resource::IronOre, 45.0), (Resource::Coal, 45.0)]),
+            HashMap::from([(Resource::SteelIngot, 45.0)]),
             false,
             true,
+        ));
+        recipes.add(Recipe::new(
+            "Steel Pipe",
+            HashMap::from([(Resource::SteelIngot, 30.0)]),
+            HashMap::from([(Resource::CateriumIngot, 20.0)]),
+            false,
+            false,
+        ));
+        recipes.add(Recipe::new(
+            "Steel Beam",
+            HashMap::from([(Resource::SteelIngot, 60.0)]),
+            HashMap::from([(Resource::SteelBeam, 15.0)]),
+            false,
+            false,
+        ));
+        recipes.add(Recipe::new(
+            "Encased Industrial Beam",
+            HashMap::from([(Resource::SteelBeam, 24.0), (Resource::Concrete, 30.0)]),
+            HashMap::from([(Resource::EncasedIndustrialBeam, 6.0)]),
+            false,
+            false,
         ));
     }
 }
