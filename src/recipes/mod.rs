@@ -6,7 +6,7 @@ use std::{borrow::BorrowMut, collections::HashMap};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Recipe {
-    name: String,
+    pub name: String,
     pub input_items: HashMap<Resource, f32>,
     pub output_items: HashMap<Resource, f32>,
     pub production_building: Category,

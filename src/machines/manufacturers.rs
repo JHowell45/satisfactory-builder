@@ -1,6 +1,8 @@
-use std::fmt::Display;
+use std::{fmt::Display, rc::Rc};
 
 use serde::{Deserialize, Serialize};
+
+use crate::recipes::Recipe;
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub enum Category {
@@ -22,79 +24,92 @@ impl Display for Category {
 }
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
-pub struct ProductionBuilding<'a> {
+pub struct ProductionBuilding {
     pub category: Category,
     pub power_usage: i16,
-    pub recipe_name: &'a str,
+    pub recipe: Rc<Recipe>,
     pub amount: usize,
 }
 
-impl<'a> ProductionBuilding<'a> {
-    pub fn new(category: Category, power_usage: i16, recipe_name: &'a str, amount: usize) -> Self {
+impl ProductionBuilding {
+    pub fn new(category: Category, power_usage: i16, recipe: Rc<Recipe>, amount: usize) -> Self {
         Self {
             category,
             power_usage,
-            recipe_name,
+            recipe,
             amount,
         }
     }
 
-    pub fn from_category(category: Category, recipe_name: &'a str) -> Self {
+    pub fn from_category(category: Category, recipe: Rc<Recipe>) -> Self {
         match category {
             Category::Assembler => Self {
                 category,
                 power_usage: 15,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Blender => Self {
                 category,
                 power_usage: 75,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Constructor => Self {
                 category,
                 power_usage: 4,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Foundry => Self {
                 category,
                 power_usage: 16,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Manufacturer => Self {
                 category,
                 power_usage: 55,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Packager => Self {
                 category,
                 power_usage: 10,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::ParticleAccelerator => Self {
                 category,
                 power_usage: 1500,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Refinery => Self {
                 category,
                 power_usage: 30,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
             Category::Smelter => Self {
                 category,
                 power_usage: 4,
-                recipe_name,
+                recipe,
                 amount: 0,
             },
         }
+    }
+}
+
+
+impl Display for ProductionBuilding {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let input = self.recipe.input_items.iter().next().unwrap();
+        let output = self.recipe.output_items.iter().next().unwrap();
+        write!(
+            f,
+            "({}:{})-[{}]-({}:{})",
+            input.0, input.1, self.recipe.name, output.0, output.1
+        )
     }
 }
