@@ -387,18 +387,41 @@ impl RecipeNode {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RecipeTree {
     root: Rc<RecipeNode>,
+    inputs: HashMap<Resource, f32>
 }
 
 impl RecipeTree {
-    pub fn build(resource: Resource, recipes: &Recipes) -> Self {
+    pub fn new(resource: Resource, recipes: &Recipes) -> Self {
         let root = Self::create_node(resource, recipes);
         Self {
             root: Rc::new(root),
+            inputs: HashMap::new(),
         }
+    }
+
+    pub fn build(resource: Resource, recipes: &Recipes) -> Self {
+        let mut instance = Self::new(resource.clone(), &recipes);
+        instance.mut_create_node(resource, recipes);
+        return instance;
     }
 
     pub fn simple_display(&self) {
         self.root.as_ref().simple_display(0);
+    }
+
+    fn mut_create_node(&mut self, resource: Resource, recipes: &Recipes) {
+        let resource_recipes: &Vec<Recipe> = &self.load_recipe(resource, recipes);
+        let recipe = resource_recipes.first().unwrap().clone();
+        let mut children = Vec::new();
+        if !recipe.end {
+            for (input_resource, _) in recipe.input_items.iter() {
+                children.push(Rc::new(Self::create_node(input_resource.clone(), recipes)));
+            }
+        } else {
+            
+        }
+        let mut node = RecipeNode::new(Rc::new(recipe));
+        node.children = children;
     }
 
     fn create_node(resource: Resource, recipes: &Recipes) -> RecipeNode {
@@ -413,9 +436,18 @@ impl RecipeTree {
             for (input_resource, _) in recipe.input_items.iter() {
                 children.push(Rc::new(Self::create_node(input_resource.clone(), recipes)));
             }
+        } else {
+
         }
         let mut node = RecipeNode::new(Rc::new(recipe));
         node.children = children;
         return node;
+    }
+
+    fn load_recipe<'a>(&self, resource: Resource, recipes: &'a Recipes) -> &'a Vec<Recipe> {
+        return match recipes.get_component_recipes(resource.clone()) {
+            Ok(recipes) => recipes,
+            Err(msg) => panic!("{} || {:?}", msg, resource),
+        }
     }
 }
