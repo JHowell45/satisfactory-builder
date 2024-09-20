@@ -1,7 +1,7 @@
-use std::{borrow::BorrowMut, collections::HashMap, rc::Rc};
-use serde::{Deserialize, Serialize};
-use colored::Colorize;
 use crate::{machines::manufacturers::ProductionBuilding, resources::Resource};
+use colored::Colorize;
+use serde::{Deserialize, Serialize};
+use std::{borrow::BorrowMut, collections::HashMap, rc::Rc};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Recipe {
@@ -211,7 +211,8 @@ impl Recipes {
         recipes.add(Recipe::new(
             "Silica",
             HashMap::from([(Resource::QuartzOre, 22.5)]),
-            HashMap::from([(Resource::QuartzCrystal, 37.5)]),            ProductionBuilding::constructor(),
+            HashMap::from([(Resource::QuartzCrystal, 37.5)]),
+            ProductionBuilding::constructor(),
             false,
             true,
         ));
@@ -301,10 +302,7 @@ impl Recipes {
     fn build_motors(recipes: &mut Recipes) {
         recipes.add(Recipe::new(
             "Rotor",
-            HashMap::from([
-                (Resource::IronRod, 20.0),
-                (Resource::Screws, 100.0),
-            ]),
+            HashMap::from([(Resource::IronRod, 20.0), (Resource::Screws, 100.0)]),
             HashMap::from([(Resource::Rotor, 4.0)]),
             ProductionBuilding::assembler(),
             false,
@@ -312,10 +310,7 @@ impl Recipes {
         ));
         recipes.add(Recipe::new(
             "Stator",
-            HashMap::from([
-                (Resource::SteelPipe, 15.0),
-                (Resource::Wire, 40.0),
-            ]),
+            HashMap::from([(Resource::SteelPipe, 15.0), (Resource::Wire, 40.0)]),
             HashMap::from([(Resource::Stator, 5.0)]),
             ProductionBuilding::assembler(),
             false,
@@ -323,10 +318,7 @@ impl Recipes {
         ));
         recipes.add(Recipe::new(
             "Motor",
-            HashMap::from([
-                (Resource::Rotor, 10.0),
-                (Resource::Stator, 10.0),
-            ]),
+            HashMap::from([(Resource::Rotor, 10.0), (Resource::Stator, 10.0)]),
             HashMap::from([(Resource::Motor, 5.0)]),
             ProductionBuilding::assembler(),
             false,
@@ -364,16 +356,34 @@ impl RecipeNode {
 
     pub fn simple_display(&self, depth: usize) {
         let separator = "   ";
-        let msg = format!("{}{} ({})", &separator.repeat(depth), &self.recipe.name, &self.recipe.production_building.category).green();
+        let msg = format!(
+            "{}{} ({})",
+            &separator.repeat(depth),
+            &self.recipe.name,
+            &self.recipe.production_building.category
+        )
+        .green();
         println!("{}", msg);
 
-        println!("{}", format!("{}|-- {}", &separator.repeat(depth), "Output: ").bold());
+        println!(
+            "{}",
+            format!("{}|-- {}", &separator.repeat(depth), "Output: ").bold()
+        );
         for output in self.recipe.output_items.iter() {
-            let msg = format!("{} |-- {}: {}", &separator.repeat(depth), output.0, output.1).blue();
+            let msg = format!(
+                "{} |-- {}: {}",
+                &separator.repeat(depth),
+                output.0,
+                output.1
+            )
+            .blue();
             println!("{}", msg);
         }
 
-        println!("{}", format!("{}|-- {}", &separator.repeat(depth), "Input: ").bold());
+        println!(
+            "{}",
+            format!("{}|-- {}", &separator.repeat(depth), "Input: ").bold()
+        );
         for input in self.recipe.input_items.iter() {
             let msg = format!("{} |-- {}: {}", &separator.repeat(depth), input.0, input.1).red();
             println!("{}", msg);
@@ -387,7 +397,7 @@ impl RecipeNode {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct RecipeTree {
     root: Rc<RecipeNode>,
-    inputs: HashMap<Resource, f32>
+    inputs: HashMap<Resource, f32>,
 }
 
 impl RecipeTree {
@@ -418,7 +428,6 @@ impl RecipeTree {
                 children.push(Rc::new(Self::create_node(input_resource.clone(), recipes)));
             }
         } else {
-            
         }
         let mut node = RecipeNode::new(Rc::new(recipe));
         node.children = children;
@@ -437,7 +446,6 @@ impl RecipeTree {
                 children.push(Rc::new(Self::create_node(input_resource.clone(), recipes)));
             }
         } else {
-
         }
         let mut node = RecipeNode::new(Rc::new(recipe));
         node.children = children;
@@ -448,6 +456,6 @@ impl RecipeTree {
         return match recipes.get_component_recipes(resource.clone()) {
             Ok(recipes) => recipes,
             Err(msg) => panic!("{} || {:?}", msg, resource),
-        }
+        };
     }
 }

@@ -1,12 +1,15 @@
 use serde::{Deserialize, Serialize};
 
-use crate::{recipes::{Recipe, Recipes}, resources::Resource};
+use crate::{
+    recipes::{Recipe, Recipes},
+    resources::Resource,
+};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PipelineNode {
     recipe: Box<Recipe>,
     parents: Vec<Box<PipelineNode>>,
-    children: Vec<Box<PipelineNode>>
+    children: Vec<Box<PipelineNode>>,
 }
 
 impl PipelineNode {
@@ -14,14 +17,14 @@ impl PipelineNode {
         Self {
             recipe,
             parents: Vec::new(),
-            children: Vec::new()
+            children: Vec::new(),
         }
     }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Pipeline {
-    root: Box<PipelineNode>
+    root: Box<PipelineNode>,
 }
 
 impl Pipeline {
@@ -34,7 +37,7 @@ impl Pipeline {
             }
         }
         Self {
-            root: Box::new(root)
+            root: Box::new(root),
         }
     }
 
@@ -42,7 +45,7 @@ impl Pipeline {
         let resource_recipes: &Vec<Recipe>;
         match recipes.get_component_recipes(resource.clone()) {
             Ok(recipes) => resource_recipes = recipes,
-            Err(msg) => panic!("{} || {:?}", msg, resource)
+            Err(msg) => panic!("{} || {:?}", msg, resource),
         }
         PipelineNode::new(Box::new(resource_recipes.first().unwrap().clone()))
     }
