@@ -35,7 +35,7 @@ impl<'a> ProductionBuilding<'a> {
             category,
             power_usage,
             recipe_name,
-            amount
+            amount,
         }
     }
 

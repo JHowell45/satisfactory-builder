@@ -5,7 +5,7 @@ mod resources;
 mod traits;
 
 use inquire::{InquireError, Select};
-use recipes::{RecipeTree, Recipes};
+use recipes::{tree::RecipeTree, Recipes};
 use resources::Resource;
 use strum::IntoEnumIterator;
 
