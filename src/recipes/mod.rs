@@ -1,14 +1,14 @@
 use std::{borrow::BorrowMut, collections::HashMap, rc::Rc};
-
 use serde::{Deserialize, Serialize};
-
-use crate::resources::Resource;
+use colored::Colorize;
+use crate::{machines::manufacturers::ProductionBuilding, resources::Resource};
 
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct Recipe {
     name: String,
     pub input_items: HashMap<Resource, f32>,
     pub output_items: HashMap<Resource, f32>,
+    pub production_building: ProductionBuilding,
     alternative: bool,
     pub end: bool,
 }
@@ -18,6 +18,7 @@ impl Recipe {
         name: &str,
         input_items: HashMap<Resource, f32>,
         output_items: HashMap<Resource, f32>,
+        production_building: ProductionBuilding,
         alternative: bool,
         end: bool,
     ) -> Self {
@@ -25,6 +26,7 @@ impl Recipe {
             name: String::from(name),
             input_items: input_items.clone(),
             output_items: output_items.clone(),
+            production_building: production_building,
             alternative,
             end,
         }
@@ -77,6 +79,7 @@ impl Recipes {
             "Iron Ingot",
             HashMap::from([(Resource::IronOre, 30.0)]),
             HashMap::from([(Resource::IronIngot, 30.0)]),
+            ProductionBuilding::smelter(),
             false,
             true,
         ));
@@ -84,6 +87,7 @@ impl Recipes {
             "Iron Plate",
             HashMap::from([(Resource::IronIngot, 30.0)]),
             HashMap::from([(Resource::IronPlate, 20.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -91,6 +95,7 @@ impl Recipes {
             "Iron Rod",
             HashMap::from([(Resource::IronIngot, 15.0)]),
             HashMap::from([(Resource::IronRod, 15.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -98,6 +103,7 @@ impl Recipes {
             "Screws",
             HashMap::from([(Resource::IronIngot, 10.0)]),
             HashMap::from([(Resource::Screws, 40.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -105,6 +111,7 @@ impl Recipes {
             "Reinforced Iron Plate",
             HashMap::from([(Resource::IronPlate, 30.0), (Resource::Screws, 60.0)]),
             HashMap::from([(Resource::ReinforcedIronPlate, 5.0)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -115,6 +122,7 @@ impl Recipes {
             "Copper Ingot",
             HashMap::from([(Resource::CopperOre, 30.0)]),
             HashMap::from([(Resource::CopperIngot, 30.0)]),
+            ProductionBuilding::smelter(),
             false,
             true,
         ));
@@ -122,6 +130,7 @@ impl Recipes {
             "Copper Sheet",
             HashMap::from([(Resource::CopperIngot, 20.0)]),
             HashMap::from([(Resource::CopperSheet, 10.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -129,6 +138,7 @@ impl Recipes {
             "Wire",
             HashMap::from([(Resource::CopperIngot, 15.0)]),
             HashMap::from([(Resource::Wire, 30.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -136,6 +146,7 @@ impl Recipes {
             "Cable",
             HashMap::from([(Resource::Wire, 60.0)]),
             HashMap::from([(Resource::Cable, 30.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -146,6 +157,7 @@ impl Recipes {
             "Concrete",
             HashMap::from([(Resource::Limestone, 45.0)]),
             HashMap::from([(Resource::Concrete, 15.0)]),
+            ProductionBuilding::constructor(),
             false,
             true,
         ));
@@ -156,6 +168,7 @@ impl Recipes {
             "Biomass (Leaves)",
             HashMap::from([(Resource::Leaves, 120.0)]),
             HashMap::from([(Resource::Biomass, 60.0)]),
+            ProductionBuilding::constructor(),
             false,
             true,
         ));
@@ -164,6 +177,7 @@ impl Recipes {
             "Biomass (Wood)",
             HashMap::from([(Resource::Wood, 60.0)]),
             HashMap::from([(Resource::Biomass, 300.0)]),
+            ProductionBuilding::constructor(),
             false,
             true,
         ));
@@ -171,6 +185,7 @@ impl Recipes {
             "Biomass (Alien Protein)",
             HashMap::from([(Resource::AlienProtein, 15.0)]),
             HashMap::from([(Resource::Biomass, 1500.0)]),
+            ProductionBuilding::constructor(),
             false,
             true,
         ));
@@ -178,6 +193,7 @@ impl Recipes {
             "Solid Biofuel",
             HashMap::from([(Resource::Biomass, 120.0)]),
             HashMap::from([(Resource::SolidBiofuel, 60.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -188,13 +204,14 @@ impl Recipes {
             "Quartz Crystal",
             HashMap::from([(Resource::QuartzOre, 37.5)]),
             HashMap::from([(Resource::QuartzCrystal, 22.5)]),
+            ProductionBuilding::constructor(),
             false,
             true,
         ));
         recipes.add(Recipe::new(
             "Silica",
             HashMap::from([(Resource::QuartzOre, 22.5)]),
-            HashMap::from([(Resource::QuartzCrystal, 37.5)]),
+            HashMap::from([(Resource::QuartzCrystal, 37.5)]),            ProductionBuilding::constructor(),
             false,
             true,
         ));
@@ -205,6 +222,7 @@ impl Recipes {
             "Caterium Ingot",
             HashMap::from([(Resource::CateriumOre, 45.0)]),
             HashMap::from([(Resource::CateriumIngot, 15.0)]),
+            ProductionBuilding::smelter(),
             false,
             true,
         ));
@@ -212,8 +230,9 @@ impl Recipes {
             "Quickwire",
             HashMap::from([(Resource::CateriumIngot, 12.0)]),
             HashMap::from([(Resource::Quickwire, 60.0)]),
+            ProductionBuilding::constructor(),
             false,
-            true,
+            false,
         ));
     }
 
@@ -222,6 +241,7 @@ impl Recipes {
             "Steel Ingot",
             HashMap::from([(Resource::IronOre, 45.0), (Resource::Coal, 45.0)]),
             HashMap::from([(Resource::SteelIngot, 45.0)]),
+            ProductionBuilding::foundry(),
             false,
             true,
         ));
@@ -229,6 +249,7 @@ impl Recipes {
             "Steel Pipe",
             HashMap::from([(Resource::SteelIngot, 30.0)]),
             HashMap::from([(Resource::SteelPipe, 20.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -236,6 +257,7 @@ impl Recipes {
             "Steel Beam",
             HashMap::from([(Resource::SteelIngot, 60.0)]),
             HashMap::from([(Resource::SteelBeam, 15.0)]),
+            ProductionBuilding::constructor(),
             false,
             false,
         ));
@@ -243,6 +265,7 @@ impl Recipes {
             "Encased Industrial Beam",
             HashMap::from([(Resource::SteelBeam, 24.0), (Resource::Concrete, 30.0)]),
             HashMap::from([(Resource::EncasedIndustrialBeam, 6.0)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -256,6 +279,7 @@ impl Recipes {
                 (Resource::IronRod, 12.0),
             ]),
             HashMap::from([(Resource::ModularFrame, 2.0)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -268,6 +292,7 @@ impl Recipes {
                 (Resource::Screws, 200.0),
             ]),
             HashMap::from([(Resource::HeavyModularFrame, 2.0)]),
+            ProductionBuilding::manufacturer(),
             false,
             false,
         ));
@@ -281,6 +306,7 @@ impl Recipes {
                 (Resource::Screws, 100.0),
             ]),
             HashMap::from([(Resource::Rotor, 4.0)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -291,6 +317,7 @@ impl Recipes {
                 (Resource::Wire, 40.0),
             ]),
             HashMap::from([(Resource::Stator, 5.0)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -301,6 +328,7 @@ impl Recipes {
                 (Resource::Stator, 10.0),
             ]),
             HashMap::from([(Resource::Motor, 5.0)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -313,6 +341,7 @@ impl Recipes {
                 (Resource::Rubber, 45.0),
             ]),
             HashMap::from([(Resource::TurboMotor, 1.875)]),
+            ProductionBuilding::assembler(),
             false,
             false,
         ));
@@ -334,7 +363,21 @@ impl RecipeNode {
     }
 
     pub fn simple_display(&self, depth: usize) {
-        println!("{}--- {}", "\t".repeat(depth), &self.recipe.name);
+        let separator = "   ";
+        let msg = format!("{}{} ({})", &separator.repeat(depth), &self.recipe.name, &self.recipe.production_building.category).green();
+        println!("{}", msg);
+
+        println!("{}", format!("{}|-- {}", &separator.repeat(depth), "Output: ").bold());
+        for output in self.recipe.output_items.iter() {
+            let msg = format!("{} |-- {}: {}", &separator.repeat(depth), output.0, output.1).blue();
+            println!("{}", msg);
+        }
+
+        println!("{}", format!("{}|-- {}", &separator.repeat(depth), "Input: ").bold());
+        for input in self.recipe.input_items.iter() {
+            let msg = format!("{} |-- {}: {}", &separator.repeat(depth), input.0, input.1).red();
+            println!("{}", msg);
+        }
         for child in self.children.iter() {
             child.simple_display(depth + 1);
         }
