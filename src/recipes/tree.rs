@@ -109,12 +109,13 @@ impl RecipeTree {
                     outputs,
                 )));
             }
-        }
-        for (key, amount) in recipe.input_items.iter() {
-            inputs
-                .entry(key.clone())
-                .and_modify(|total| *total += amount)
-                .or_insert(*amount);
+        } else {
+            for (key, amount) in recipe.input_items.iter() {
+                inputs
+                    .entry(key.clone())
+                    .and_modify(|total| *total += amount)
+                    .or_insert(*amount);
+            }
         }
         for (key, amount) in recipe.output_items.iter() {
             outputs
