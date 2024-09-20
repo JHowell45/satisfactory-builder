@@ -20,8 +20,8 @@ impl Display for PipelineNode {
                     node = &parent;
                     d.push_str(format!("{}", &node.building).as_str());
                 }
-            },
-            None => {},
+            }
+            None => {}
         };
         write!(f, "{}", d)
     }
@@ -38,14 +38,11 @@ impl PipelineNode {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Pipeline {
-    root: Rc<PipelineNode>,
+    root: Vec<Rc<PipelineNode>>,
 }
 
-impl Display for Pipeline {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let d: String = String::new();
-        write!(f, "{}", d)
+impl Pipeline {
+    pub fn new() -> Self {
+        Self { root: Vec::new() }
     }
 }
-
-impl Pipeline {}

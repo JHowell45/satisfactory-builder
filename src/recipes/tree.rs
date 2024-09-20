@@ -1,4 +1,4 @@
-use crate::resources::Resource;
+use crate::{pipelines::Pipeline, resources::Resource};
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, rc::Rc};
@@ -67,7 +67,7 @@ pub struct RecipeTree {
 }
 
 impl RecipeTree {
-    pub fn build(resource: Resource, recipes: &Recipes) -> Self {
+    pub fn build(resource: Resource, recipes: &Recipes, pipeline: &mut Pipeline) -> Self {
         let mut inputs: HashMap<Resource, f32> = HashMap::new();
         let mut outputs: HashMap<Resource, f32> = HashMap::new();
         let root = Rc::new(Self::create_node(

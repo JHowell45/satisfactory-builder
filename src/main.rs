@@ -5,6 +5,7 @@ mod resources;
 mod traits;
 
 use inquire::{InquireError, Select};
+use pipelines::Pipeline;
 use recipes::{tree::RecipeTree, Recipes};
 use resources::Resource;
 use strum::IntoEnumIterator;
@@ -17,9 +18,10 @@ fn main() {
 
     match ans {
         Ok(choice) => {
-            let pipeline = RecipeTree::build(choice, &recipes);
-            println!("{:#?}", pipeline);
-            pipeline.simple_display();
+            let mut pipeline = Pipeline::new();
+            let recipe_tree = RecipeTree::build(choice, &recipes, &mut pipeline);
+            println!("{:#?}", recipe_tree);
+            recipe_tree.simple_display();
         }
         Err(_) => println!("There was an error, please try again"),
     }
