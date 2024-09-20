@@ -1,7 +1,9 @@
+use std::fmt::Display;
+
 use serde::{Deserialize, Serialize};
+use strum::EnumIter;
 
-
-#[derive(Debug, Eq, Hash, PartialEq, Clone, Serialize, Deserialize)]
+#[derive(Debug, Eq, Hash, PartialEq, Clone, Serialize, Deserialize, EnumIter)]
 pub enum Resource {
     // Iron
     IronOre,
@@ -76,9 +78,14 @@ pub enum Resource {
     CoolingSystem,
     Battery,
     // Liquids
-    Water
+    Water,
 }
 
+impl Display for Resource {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 // #[derive(Debug)]
 // pub struct ResourceDeposit {
 //     name: ResourceT,
