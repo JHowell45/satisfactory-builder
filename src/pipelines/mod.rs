@@ -2,11 +2,11 @@ use std::{fmt::Display, rc::Rc};
 
 use serde::{Deserialize, Serialize};
 
-use crate::{machines::manufacturers::ProductionBuilding, recipes::Recipe};
+use crate::{machines::manufacturers::ProductionBuilding};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PipelineNode {
-    building: Rc<ProductionBuilding>,
+    building: ProductionBuilding,
     parent: Option<Rc<PipelineNode>>,
 }
 
@@ -28,7 +28,7 @@ impl Display for PipelineNode {
 }
 
 impl PipelineNode {
-    pub fn new(building: Rc<ProductionBuilding>) -> Self {
+    pub fn new(building: ProductionBuilding) -> Self {
         Self {
             building,
             parent: None,
@@ -48,9 +48,8 @@ impl Pipeline {
     }
 
     pub fn add(&mut self, building: ProductionBuilding) {
-        let building = Rc::new(building);
-        let pipeline = PipelineNode::new(building.clone());
-        self.root.push(Rc::new(pipeline));
         self.total_power += building.power_usage;
+        let pipeline = PipelineNode::new(building);
+        self.root.push(Rc::new(pipeline));
     }
 }
