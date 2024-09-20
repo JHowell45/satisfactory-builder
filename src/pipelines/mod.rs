@@ -6,26 +6,31 @@ use crate::{machines::manufacturers::ProductionBuilding, recipes::Recipe};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PipelineNode {
-    recipe: Rc<ProductionBuilding>,
+    building: Rc<ProductionBuilding>,
     parent: Option<Rc<PipelineNode>>,
 }
 
 impl Display for PipelineNode {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let mut node = self;
-        let d: String = format!("{}", &node.recipe);
-        while let Some(parent) = node.parent {
-            node = parent;
-            d.push_str(format!("{}", &node.recipe).as_str());
-        }
+        let mut d: String = format!("{}", &self.building);
+        match &self.parent {
+            Some(parent) => {
+                let mut node = parent;
+                while let Some(parent) = &node.parent {
+                    node = &parent;
+                    d.push_str(format!("{}", &node.building).as_str());
+                }
+            },
+            None => {},
+        };
         write!(f, "{}", d)
     }
 }
 
 impl PipelineNode {
-    pub fn new(recipe: Rc<Recipe>) -> Self {
+    pub fn new(building: Rc<ProductionBuilding>) -> Self {
         Self {
-            recipe,
+            building,
             parent: None,
         }
     }
