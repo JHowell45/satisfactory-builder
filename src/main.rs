@@ -21,6 +21,7 @@ fn main() {
             let mut pipeline = Pipeline::new();
             let recipe_tree = RecipeTree::build(choice, &recipes, &mut pipeline);
             println!("{:#?}", recipe_tree);
+            println!("{:#?}", pipeline);
             recipe_tree.simple_display();
         }
         Err(_) => println!("There was an error, please try again"),

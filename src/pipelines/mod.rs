@@ -39,10 +39,18 @@ impl PipelineNode {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Pipeline {
     root: Vec<Rc<PipelineNode>>,
+    total_power: usize
 }
 
 impl Pipeline {
     pub fn new() -> Self {
-        Self { root: Vec::new() }
+        Self { root: Vec::new(), total_power: 0 }
+    }
+
+    pub fn add(&mut self, building: ProductionBuilding) {
+        let building = Rc::new(building);
+        let pipeline = PipelineNode::new(building.clone());
+        self.root.push(Rc::new(pipeline));
+        self.total_power += building.power_usage;
     }
 }

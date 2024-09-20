@@ -1,4 +1,6 @@
-use crate::{pipelines::Pipeline, resources::Resource};
+use crate::{
+    machines::manufacturers::ProductionBuilding, pipelines::Pipeline, resources::Resource,
+};
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
 use std::{collections::HashMap, rc::Rc};
@@ -100,7 +102,7 @@ impl RecipeTree {
             Ok(recipes) => resource_recipes = recipes,
             Err(msg) => panic!("{} || {:?}", msg, resource),
         }
-        let recipe = resource_recipes.first().unwrap().clone();
+        let recipe = Rc::new(resource_recipes.first().unwrap().clone());
         let mut children = Vec::new();
         if !recipe.end {
             for (input_resource, _) in recipe.input_items.iter() {
@@ -119,6 +121,10 @@ impl RecipeTree {
                     .and_modify(|total| *total += amount)
                     .or_insert(*amount);
             }
+            pipeline.add(ProductionBuilding::from_category(
+                recipe.production_building.clone(),
+                recipe.clone(),
+            ));
         }
         for (key, amount) in recipe.output_items.iter() {
             outputs
@@ -126,7 +132,7 @@ impl RecipeTree {
                 .and_modify(|total| *total += amount)
                 .or_insert(*amount);
         }
-        let mut node = RecipeNode::new(Rc::new(recipe));
+        let mut node = RecipeNode::new(recipe);
         node.children = children;
         return node;
     }

@@ -26,13 +26,13 @@ impl Display for Category {
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 pub struct ProductionBuilding {
     pub category: Category,
-    pub power_usage: i16,
+    pub power_usage: usize,
     pub recipe: Rc<Recipe>,
     pub amount: usize,
 }
 
 impl ProductionBuilding {
-    pub fn new(category: Category, power_usage: i16, recipe: Rc<Recipe>, amount: usize) -> Self {
+    pub fn new(category: Category, power_usage: usize, recipe: Rc<Recipe>, amount: usize) -> Self {
         Self {
             category,
             power_usage,
