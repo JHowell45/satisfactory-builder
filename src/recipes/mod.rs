@@ -332,6 +332,13 @@ impl RecipeNode {
             children: Vec::new(),
         }
     }
+
+    pub fn simple_display(&self, depth: usize) {
+        println!("{}--- {}", "\t".repeat(depth), &self.recipe.name);
+        for child in self.children.iter() {
+            child.simple_display(depth + 1);
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -345,6 +352,10 @@ impl RecipeTree {
         Self {
             root: Rc::new(root),
         }
+    }
+
+    pub fn simple_display(&self) {
+        self.root.as_ref().simple_display(0);
     }
 
     fn create_node(resource: Resource, recipes: &Recipes) -> RecipeNode {

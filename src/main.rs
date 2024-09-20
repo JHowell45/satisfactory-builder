@@ -19,4 +19,5 @@ fn main() {
 
     let pipeline = RecipeTree::build(Resource::Motor, &recipes);
     println!("{:#?}", pipeline);
+    pipeline.simple_display();
 }
