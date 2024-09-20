@@ -26,13 +26,16 @@ pub struct ProductionBuilding<'a> {
     pub category: Category,
     pub power_usage: i16,
     pub recipe_name: &'a str,
+    pub amount: usize,
 }
 
 impl<'a> ProductionBuilding<'a> {
-    pub fn new(category: Category, power_usage: i16) -> Self {
+    pub fn new(category: Category, power_usage: i16, recipe_name: &'a str, amount: usize) -> Self {
         Self {
             category,
             power_usage,
+            recipe_name,
+            amount
         }
     }
 
@@ -41,47 +44,56 @@ impl<'a> ProductionBuilding<'a> {
             Category::Assembler => Self {
                 category,
                 power_usage: 15,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Blender => Self {
                 category,
                 power_usage: 75,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Constructor => Self {
                 category,
                 power_usage: 4,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Foundry => Self {
                 category,
                 power_usage: 16,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Manufacturer => Self {
                 category,
                 power_usage: 55,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Packager => Self {
                 category,
                 power_usage: 10,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::ParticleAccelerator => Self {
                 category,
                 power_usage: 1500,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Refinery => Self {
                 category,
                 power_usage: 30,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
             Category::Smelter => Self {
                 category,
                 power_usage: 4,
-                recipe_name
+                recipe_name,
+                amount: 0,
             },
         }
     }
