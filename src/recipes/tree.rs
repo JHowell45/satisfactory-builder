@@ -75,6 +75,7 @@ impl RecipeTree {
             recipes,
             &mut inputs,
             &mut outputs,
+            pipeline,
         ));
         Self {
             root,
@@ -92,6 +93,7 @@ impl RecipeTree {
         recipes: &Recipes,
         inputs: &mut HashMap<Resource, f32>,
         outputs: &mut HashMap<Resource, f32>,
+        pipeline: &mut Pipeline,
     ) -> RecipeNode {
         let resource_recipes: &Vec<Recipe>;
         match recipes.get_component_recipes(resource.clone()) {
@@ -107,6 +109,7 @@ impl RecipeTree {
                     recipes,
                     inputs,
                     outputs,
+                    pipeline,
                 )));
             }
         } else {
