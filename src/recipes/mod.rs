@@ -1,4 +1,5 @@
 pub mod tree;
+pub mod functions;
 
 use crate::{machines::manufacturers::Category, resources::Resource};
 use serde::{Deserialize, Serialize};

@@ -1,8 +1,8 @@
+use serde::{Deserialize, Serialize};
 use std::{fmt::Display, rc::Rc};
 
-use serde::{Deserialize, Serialize};
-
-use crate::{machines::manufacturers::ProductionBuilding};
+use crate::machines::manufacturers::ProductionBuilding;
+use crate::resources::Resource;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct PipelineNode {
@@ -34,17 +34,28 @@ impl PipelineNode {
             parent: None,
         }
     }
+
+    pub fn calculate(&self, input: Vec<(Resource, f32)>) -> f32 {
+        let mut result: f32 = 0.0;
+        for (resource, amount) in input.iter() {
+
+        }
+        return result;
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Pipeline {
     root: Vec<Rc<PipelineNode>>,
-    total_power: usize
+    total_power: usize,
 }
 
 impl Pipeline {
     pub fn new() -> Self {
-        Self { root: Vec::new(), total_power: 0 }
+        Self {
+            root: Vec::new(),
+            total_power: 0,
+        }
     }
 
     pub fn add(&mut self, building: ProductionBuilding) {
