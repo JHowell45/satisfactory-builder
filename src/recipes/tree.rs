@@ -3,16 +3,31 @@ use crate::{
 };
 use colored::Colorize;
 use serde::{Deserialize, Serialize};
-use std::{borrow::BorrowMut, cell::RefCell, collections::HashMap, rc::Rc};
+use std::{cell::RefCell, collections::{HashMap, HashSet}, fmt::Debug, rc::Rc};
+use uuid::Uuid;
 
 use super::{Recipe, Recipes};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct RecipeNode {
+    uuid: Uuid,
     recipe: Rc<Recipe>,
     calculations: HashMap<String, f32>,
     parent: Option<Rc<RefCell<RecipeNode>>>,
     children: Vec<Rc<RefCell<RecipeNode>>>,
+    roots: Vec<Rc<RefCell<RecipeNode>>>,
+}
+
+impl Debug for RecipeNode {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("RecipeNode")
+            .field("id", &self.uuid)
+            .field("recipe", &self.recipe)
+            .field("calculations", &self.calculations)
+            // .field("parent_id", &self.parent.unwrap().as_ref().borrow().uuid)
+            .field("children", &self.children)
+            .finish()
+    }
 }
 
 impl RecipeNode {
@@ -27,10 +42,12 @@ impl RecipeNode {
             }
         }
         Self {
+            uuid: Uuid::new_v4(),
             recipe,
             calculations,
             parent: None,
             children: Vec::new(),
+            roots: Vec::new(),
         }
     }
 
@@ -93,17 +110,27 @@ pub struct RecipeTree {
     root: Rc<RefCell<RecipeNode>>,
     inputs: HashMap<Resource, f32>,
     outputs: HashMap<Resource, f32>,
+    entrypoints: Vec<Rc<RefCell<RecipeNode>>>,
 }
 
 impl RecipeTree {
     pub fn build(resource: Resource, recipes: &Recipes, pipeline: &mut Pipeline) -> Self {
         let mut inputs: HashMap<Resource, f32> = HashMap::new();
         let mut outputs: HashMap<Resource, f32> = HashMap::new();
-        let root = Self::create_node(resource, recipes, &mut inputs, &mut outputs, pipeline);
+        let mut entrypoints = Vec::new();
+        let root = Self::create_node(
+            resource,
+            recipes,
+            &mut inputs,
+            &mut outputs,
+            pipeline,
+            entrypoints.as_mut(),
+        );
         Self {
             root,
             inputs,
             outputs,
+            entrypoints,
         }
     }
 
@@ -117,6 +144,7 @@ impl RecipeTree {
         inputs: &mut HashMap<Resource, f32>,
         outputs: &mut HashMap<Resource, f32>,
         pipeline: &mut Pipeline,
+        entrypoints: &mut Vec<Rc<RefCell<RecipeNode>>>,
     ) -> Rc<RefCell<RecipeNode>> {
         let resource_recipes: &Vec<Recipe>;
         match recipes.get_component_recipes(resource.clone()) {
@@ -131,8 +159,14 @@ impl RecipeTree {
         let mut children = Vec::new();
         if !recipe.end {
             for (input_resource, _) in recipe.input_items.iter() {
-                let child =
-                    Self::create_node(input_resource.clone(), recipes, inputs, outputs, pipeline);
+                let child = Self::create_node(
+                    input_resource.clone(),
+                    recipes,
+                    inputs,
+                    outputs,
+                    pipeline,
+                    entrypoints,
+                );
                 child.as_ref().borrow_mut().add_parent(node_p.clone());
                 children.push(child.clone());
             }
@@ -143,10 +177,13 @@ impl RecipeTree {
                     .and_modify(|total| *total += amount)
                     .or_insert(*amount);
             }
+
             pipeline.add(ProductionBuilding::from_category(
                 recipe.production_building.clone(),
                 recipe.clone(),
             ));
+
+            entrypoints.push(node_p.clone());
         }
         for (key, amount) in recipe.output_items.iter() {
             outputs
@@ -156,5 +193,15 @@ impl RecipeTree {
         }
         node_p.as_ref().borrow_mut().children = children;
         return node_p;
+    }
+
+    pub fn input_ingredients(&self) -> HashSet<Resource> {
+        let mut results = HashSet::new();
+        for entrypoint in self.entrypoints.iter() {
+            for (resource, _) in entrypoint.as_ref().borrow().recipe.input_items.iter() {
+                results.insert(resource.clone());
+            }
+        }
+        return results;
     }
 }

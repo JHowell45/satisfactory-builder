@@ -36,7 +36,7 @@ impl PipelineNode {
     }
 
     pub fn calculate(&self, input: Vec<(Resource, f32)>) -> f32 {
-        let mut result: f32 = 0.0;
+        let result: f32 = 0.0;
         for (resource, amount) in input.iter() {
 
         }
